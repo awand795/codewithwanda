@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AdminAuthController;
+use App\Http\Controllers\Api\AdminCategoryController;
+use App\Http\Controllers\Api\AdminCourseController;
+use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CompilerController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LessonController;
@@ -25,6 +30,11 @@ Route::get('/courses/{slug}', [CourseController::class, 'show']);
 
 // Midtrans webhook (no auth)
 Route::post('/payments/webhook', [PaymentController::class, 'webhook']);
+
+// Compiler API (public for code execution)
+Route::get('/compiler/languages', [CompilerController::class, 'languages']);
+Route::post('/compiler/execute', [CompilerController::class, 'execute']);
+Route::post('/compiler/test', [CompilerController::class, 'test']);
 
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {

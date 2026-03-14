@@ -17,16 +17,25 @@ class Lesson extends Model
         'title',
         'slug',
         'content',
+        'content_html',
         'video_url',
         'duration_minutes',
         'is_free_preview',
         'order',
+        'exercise_description',
+        'starter_code',
+        'solution_code',
+        'programming_language',
+        'test_cases',
+        'is_completed',
     ];
 
     protected function casts(): array
     {
         return [
             'is_free_preview' => 'boolean',
+            'is_completed' => 'boolean',
+            'test_cases' => 'array',
         ];
     }
 
@@ -48,5 +57,10 @@ class Lesson extends Model
     public function userProgress(): HasMany
     {
         return $this->hasMany(UserProgress::class);
+    }
+
+    public function getFormattedContentAttribute(): string
+    {
+        return $this->content_html ?: $this->content;
     }
 }

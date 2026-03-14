@@ -53,6 +53,11 @@ export interface LessonSummary {
   duration_minutes: number
   is_free_preview: boolean
   order: number
+  content_html?: string
+  starter_code?: string
+  exercise_description?: string
+  programming_language?: string
+  test_cases?: Array<{ input: string; expected_output: string }>
 }
 
 export interface Lesson extends LessonSummary {
@@ -61,6 +66,11 @@ export interface Lesson extends LessonSummary {
   video_url: string | null
   has_access: boolean
   prerequisites?: LessonSummary[]
+  content_html?: string
+  starter_code?: string
+  exercise_description?: string
+  programming_language?: string
+  test_cases?: Array<{ input: string; expected_output: string }>
 }
 
 export interface UserProgress {
