@@ -1,147 +1,147 @@
-# CodeWithWanda - Web Learning System
+# CodeWithWanda - Sistem Pembelajaran Web
 
-A modern, full-stack e-learning platform built with Laravel 12 and React 19, designed to deliver interactive online courses and track student progress.
+Platform e-learning full-stack modern yang dibangun dengan Laravel 12 dan React 19, dirancang untuk menghadirkan kursus online interaktif dan melacak kemajuan siswa.
 
 ## 🚀 Tech Stack
 
 ### Backend
-- **Laravel 12** - PHP 8.2+ framework
-- **Laravel Sanctum** - API authentication
-- **Midtrans** - Payment gateway integration
+- **Laravel 12** - Framework PHP 8.2+
+- **Laravel Sanctum** - Autentikasi API
+- **Midtrans** - Integrasi payment gateway
 - **SQLite** - Database (default)
-- **Laravel Sail** - Docker development environment
+- **Laravel Sail** - Environment development Docker
 
 ### Frontend
-- **React 19** - UI library
+- **React 19** - Library UI
 - **TypeScript** - Type safety
-- **React Router** - Client-side routing
-- **TanStack Query** - Data fetching & caching
+- **React Router** - Routing client-side
+- **TanStack Query** - Fetching & caching data
 - **Zustand** - State management
 - **Tailwind CSS 4** - Styling
 - **Lucide React** - Icons
 - **Axios** - HTTP client
 - **Vite** - Build tool
 
-## 📁 Project Structure
+## 📁 Struktur Project
 
 ```
 Web Learning System/
-├── backend/                 # Laravel API backend
+├── backend/                 # Backend Laravel API
 │   ├── app/
 │   │   ├── Http/           # Controllers & middleware
 │   │   ├── Models/         # Eloquent models
 │   │   ├── Providers/      # Service providers
 │   │   └── Services/       # Business logic
-│   ├── config/             # Configuration files
+│   ├── config/             # File konfigurasi
 │   ├── database/
-│   │   ├── migrations/     # Database migrations
+│   │   ├── migrations/     # Migrasi database
 │   │   ├── factories/      # Model factories
 │   │   └── seeders/        # Database seeders
-│   └── routes/             # API routes
+│   └── routes/             # Routes API
 │
-└── frontend/               # React frontend
+└── frontend/               # Frontend React
     ├── src/
-    │   ├── api/           # API integration
-    │   ├── components/    # Reusable components
+    │   ├── api/           # Integrasi API
+    │   ├── components/    # Komponen reusable
     │   ├── hooks/         # Custom React hooks
-    │   ├── pages/         # Page components
+    │   ├── pages/         # Komponen halaman
     │   ├── stores/        # Zustand stores
     │   └── types/         # TypeScript types
     └── public/            # Static assets
 ```
 
-## 📚 Core Features
+## 📚 Fitur Utama
 
-### Course Management
-- **Categories** - Organize courses by topic
-- **Courses** - Main learning content containers
-- **Modules** - Break down courses into sections
-- **Lessons** - Individual learning units
-- **Prerequisites** - Define lesson dependencies
+### Manajemen Kursus
+- **Categories** - Organisasi kursus berdasarkan topik
+- **Courses** - Wadah konten pembelajaran utama
+- **Modules** - Memecah kursus menjadi beberapa bagian
+- **Lessons** - Unit pembelajaran individual
+- **Prerequisites** - Menentukan dependensi lesson
 
-### User Progress Tracking
-- Track completion status for each lesson
-- Monitor overall course progress
-- Prerequisite enforcement for sequential learning
+### Pelacakan Kemajuan Pengguna
+- Lacak status penyelesaian untuk setiap lesson
+- Monitor kemajuan keseluruhan kursus
+- Penegakan prerequisite untuk pembelajaran berurutan
 
-### Payment Integration
-- Midtrans payment gateway
-- Transaction management
-- Secure payment processing
+### Integrasi Pembayaran
+- Payment gateway Midtrans
+- Manajemen transaksi
+- Pemrosesan pembayaran yang aman
 
-### User Roles
-- Student role for learners
-- Instructor/Admin capabilities
-- Avatar support for user profiles
+### Role Pengguna
+- Role student untuk pelajar
+- Kapabilitas Instructor/Admin
+- Dukungan avatar untuk profil pengguna
 
-## 🛠️ Installation & Setup
+## 🛠️ Instalasi & Setup
 
 ### Prerequisites
-- PHP 8.2 or higher
+- PHP 8.2 atau lebih tinggi
 - Composer
-- Node.js 18+ and npm
-- SQLite (or MySQL/PostgreSQL)
+- Node.js 18+ dan npm
+- SQLite (atau MySQL/PostgreSQL)
 
-### Backend Setup
+### Setup Backend
 
 ```bash
 cd backend
 
-# Install PHP dependencies
+# Install dependencies PHP
 composer install
 
-# Copy environment file and generate app key
+# Copy file environment dan generate app key
 cp .env.example .env
 php artisan key:generate
 
-# Run migrations
+# Jalankan migrations
 php artisan migrate
 
-# (Optional) Seed the database
+# (Opsional) Seed database
 php artisan db:seed
 
-# Start development server
+# Jalankan development server
 composer dev
 ```
 
-### Frontend Setup
+### Setup Frontend
 
 ```bash
 cd frontend
 
-# Install Node dependencies
+# Install dependencies Node
 npm install
 
-# Copy environment file if needed
+# Copy file environment jika diperlukan
 cp .env.example .env
 
-# Start development server
+# Jalankan development server
 npm run dev
 ```
 
-### Quick Setup (Backend)
+### Setup Cepat (Backend)
 
-Use the composer script for automated setup:
+Gunakan script composer untuk setup otomatis:
 
 ```bash
 cd backend
 composer run setup
 ```
 
-## 🔧 Development Scripts
+## 🔧 Script Development
 
 ### Backend
 ```bash
-# Run development server with hot reload
+# Jalankan development server dengan hot reload
 composer run dev
 
-# Run tests
+# Jalankan tests
 composer run test
 
-# Clear configuration cache
+# Hapus configuration cache
 php artisan config:clear
 
-# Run database migrations
+# Jalankan database migrations
 php artisan migrate
 
 # Seed database
@@ -150,31 +150,31 @@ php artisan db:seed
 
 ### Frontend
 ```bash
-# Development server with HMR
+# Development server dengan HMR
 npm run dev
 
-# Production build
+# Build production
 npm run build
 
 # Lint code
 npm run lint
 
-# Preview production build
+# Preview build production
 npm run preview
 ```
 
-## 🗄️ Database Schema
+## 🗄️ Schema Database
 
-### Main Tables
-- `users` - User accounts with roles and avatars
-- `categories` - Course categories
-- `courses` - Course offerings
-- `modules` - Course modules/sections
-- `lessons` - Individual lessons
-- `lesson_prerequisites` - Lesson dependencies
-- `user_progress` - Learning progress tracking
-- `transactions` - Payment records
-- `cache`, `jobs`, `sessions` - Laravel system tables
+### Tabel Utama
+- `users` - Akun pengguna dengan roles dan avatars
+- `categories` - Kategori kursus
+- `courses` - Penawaran kursus
+- `modules` - Modul/bagian kursus
+- `lessons` - Lesson individual
+- `lesson_prerequisites` - Dependensi lesson
+- `user_progress` - Pelacakan kemajuan pembelajaran
+- `transactions` - Catatan pembayaran
+- `cache`, `jobs`, `sessions` - Tabel sistem Laravel
 
 ## 🔐 Environment Variables
 
@@ -184,7 +184,7 @@ APP_NAME=CodeWithWanda
 APP_URL=http://localhost:8000
 
 DB_CONNECTION=sqlite
-# Or use MySQL/PostgreSQL:
+# Atau gunakan MySQL/PostgreSQL:
 # DB_HOST=127.0.0.1
 # DB_PORT=3306
 # DB_DATABASE=codewithwanda
@@ -209,45 +209,45 @@ VITE_API_URL=http://localhost:8000/api
 cd backend
 composer run test
 
-# Frontend tests (if configured)
+# Frontend tests (jika dikonfigurasi)
 cd frontend
 npm test
 ```
 
 ## 📝 API Endpoints
 
-> Documentation for API endpoints will be available at `/api/documentation` when using Laravel Sanctum with OpenAPI/Scribe.
+> Dokumentasi untuk API endpoints akan tersedia di `/api/documentation` ketika menggunakan Laravel Sanctum dengan OpenAPI/Scribe.
 
 ## 🚀 Deployment
 
 ### Backend
-1. Set `APP_DEBUG=false` in `.env`
-2. Run `composer install --optimize-autoloader --no-dev`
-3. Run `php artisan config:cache`
-4. Run `php artisan route:cache`
-5. Run `php artisan migrate --force`
+1. Set `APP_DEBUG=false` di `.env`
+2. Jalankan `composer install --optimize-autoloader --no-dev`
+3. Jalankan `php artisan config:cache`
+4. Jalankan `php artisan route:cache`
+5. Jalankan `php artisan migrate --force`
 
 ### Frontend
-1. Build for production: `npm run build`
-2. Serve the `dist` folder via your web server
+1. Build untuk production: `npm run build`
+2. Serve folder `dist` melalui web server Anda
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork repository
+2. Buat branch feature (`git checkout -b feature/amazing-feature`)
+3. Commit perubahan Anda (`git commit -m 'Add amazing feature'`)
+4. Push ke branch (`git push origin feature/amazing-feature`)
+5. Buka Pull Request
 
 ## 📄 License
 
-This project is proprietary software developed for CodeWithWanda.
+Project ini adalah proprietary software yang dikembangkan untuk CodeWithWanda.
 
 ## 👥 Team
 
-Built with ❤️ by the CodeWithWanda Development Team
+Dibangun dengan ❤️ oleh Tim Development CodeWithWanda
 
 ---
 
-**Happy Learning! 🎓**
+**Selamat Belajar! 🎓**
 "# codewithwanda" 
