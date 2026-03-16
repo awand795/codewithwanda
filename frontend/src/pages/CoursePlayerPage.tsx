@@ -58,14 +58,23 @@ export default function CoursePlayerPage() {
   useEffect(() => {
     if (error) {
       const axiosError = error as AxiosError<ErrorResponseData>
+      // Only set access error for 403 (forbidden) errors
+      // For 404 or other errors, let them be handled elsewhere
       if (axiosError.response?.status === 403) {
         const errorData = axiosError.response.data
         setAccessError(errorData)
+      } else if (axiosError.response?.status === 404) {
+        // Lesson not found - navigate back
+        toast({
+          title: 'Lesson tidak ditemukan',
+          description: 'Lesson yang Anda cari tidak ada.',
+          variant: 'destructive',
+        })
       }
     } else {
       setAccessError(null)
     }
-  }, [error])
+  }, [error, toast])
 
   useEffect(() => {
     if (lesson) {
@@ -168,7 +177,7 @@ export default function CoursePlayerPage() {
   }
 
   // Loading state
-  if (courseLoading || lessonLoading) {
+  if (courseLoading || lessonLoading || (!lesson && !accessError)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -297,11 +306,27 @@ export default function CoursePlayerPage() {
   }
 
   const lessonData = lesson as any
-  const hasQuiz = lessonData.quiz && lessonData.quiz.length > 0
-  const hasCodeExercise = lessonData.programming_language
+  const hasQuiz = lessonData?.quiz && lessonData.quiz.length > 0
+  const hasCodeExercise = lessonData?.programming_language
+  const hasContent = lessonData?.content_html || lessonData?.content
 
   const allLessons = course?.modules?.flatMap(m => m.lessons || []) || []
   const currentLessonItem = allLessons[currentLessonIndex]
+
+  // Debug logging for free course access
+  useEffect(() => {
+    if (lessonData) {
+      console.log('Lesson loaded:', {
+        title: lessonData.title,
+        slug: lessonData.slug,
+        isFreePreview: lessonData.is_free_preview,
+        hasAccess: lessonData.has_access,
+        hasContent: !!hasContent,
+        course: course?.title,
+        courseIsPremium: course?.is_premium,
+      })
+    }
+  }, [lessonData, course, hasContent])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -380,8 +405,24 @@ export default function CoursePlayerPage() {
                 <CardContent className="p-8">
                   <div className="lesson-content prose prose-lg max-w-none">
                     {(() => {
-                      const content = lessonData.content_html || lessonData.content
-                      return content ? (
+                      const content = lessonData?.content_html || lessonData?.content
+                      if (!content) {
+                        return (
+                          <div className="text-center py-12">
+                            <BookOpen className="h-16 w-16 mx-auto mb-4 opacity-30" />
+                            <h3 className="text-xl font-semibold mb-2">Content Not Available</h3>
+                            <p className="text-muted-foreground">
+                              This lesson content is not available yet.
+                            </p>
+                            {course?.is_premium && (
+                              <p className="text-sm text-muted-foreground mt-2">
+                                This is a premium course. Please purchase to access the content.
+                              </p>
+                            )}
+                          </div>
+                        )
+                      }
+                      return (
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           rehypePlugins={[rehypeRaw]}
@@ -514,11 +555,6 @@ export default function CoursePlayerPage() {
                         >
                           {content}
                         </ReactMarkdown>
-                      ) : (
-                        <div className="text-center py-12 text-muted-foreground">
-                          <BookOpen className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                          <p className="text-lg">Content not available yet.</p>
-                        </div>
                       )
                     })()}
                   </div>
