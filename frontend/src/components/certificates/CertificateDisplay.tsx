@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Trophy, Download, Award, CheckCircle, Lock, ExternalLink, Certificate } from 'lucide-react'
+import { Trophy, Download, Award, CheckCircle, Lock, ExternalLink, FileBadge } from 'lucide-react'
 import type { Certificate, CertificateEligibility } from '@/types'
 
 interface CertificateDisplayProps {
