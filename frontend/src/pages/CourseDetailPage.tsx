@@ -292,7 +292,7 @@ export default function CourseDetailPage() {
                               onClick={() => navigate(`/courses/${slug}/learn/${lesson.slug}`)}
                               className="shrink-0"
                             >
-                              {lesson.is_free_preview ? (
+                              {!course.is_premium || lesson.is_free_preview ? (
                                 <>
                                   <PlayCircle className="h-4 w-4 mr-1" />
                                   Start
