@@ -16,7 +16,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'id',
-    debug: false,
+    debug: true, // Enable debug to see what's happening
     interpolation: {
       escapeValue: false,
     },
@@ -25,5 +25,10 @@ i18n
       caches: ['localStorage'],
     },
   })
+
+// Log when language changes
+i18n.on('languageChanged', (lng) => {
+  console.log('Language changed to:', lng)
+})
 
 export default i18n

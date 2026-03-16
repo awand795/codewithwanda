@@ -64,7 +64,7 @@ export default function Navbar() {
             </Button>
 
             <Link to="/" className="text-xl font-bold text-primary">
-              LearnPath
+              {t('app_name', { defaultValue: 'LearnPath' })}
             </Link>
           </div>
 
@@ -74,13 +74,13 @@ export default function Navbar() {
               to="/categories"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              Categories
+              {t('navigation.categories')}
             </Link>
             <Link
               to="/courses"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              Courses
+              {t('navigation.courses')}
             </Link>
           </nav>
 
