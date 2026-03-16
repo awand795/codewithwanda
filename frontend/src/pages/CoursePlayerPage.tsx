@@ -300,6 +300,9 @@ export default function CoursePlayerPage() {
   const hasQuiz = lessonData.quiz && lessonData.quiz.length > 0
   const hasCodeExercise = lessonData.programming_language
 
+  const allLessons = course?.modules?.flatMap(m => m.lessons || []) || []
+  const currentLessonItem = allLessons[currentLessonIndex]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
@@ -674,7 +677,6 @@ export default function CoursePlayerPage() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  const allLessons = course?.modules?.flatMap(m => m.lessons || []) || []
                   const prevLesson = allLessons[currentLessonIndex - 1]
                   if (prevLesson) {
                     navigate(`/courses/${slug}/learn/${prevLesson.slug}`)
@@ -688,7 +690,6 @@ export default function CoursePlayerPage() {
               </Button>
               <Button
                 onClick={() => {
-                  const allLessons = course?.modules?.flatMap(m => m.lessons || []) || []
                   const nextLesson = allLessons[currentLessonIndex + 1]
                   if (nextLesson) {
                     navigate(`/courses/${slug}/learn/${nextLesson.slug}`)
