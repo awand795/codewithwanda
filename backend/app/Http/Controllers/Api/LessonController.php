@@ -29,19 +29,31 @@ class LessonController extends Controller
         if ($user && $user->role === 'admin') {
             // Track lesson access for admin too
             $this->progressService->trackLessonAccess($user, $lesson);
-            
+
             return response()->json([
                 'data' => new LessonResource($lesson),
             ]);
         }
 
-        // Free preview — always accessible
+        // Free course - all lessons are accessible to everyone
+        if (!$course->is_premium) {
+            // Track lesson access
+            if ($user) {
+                $this->progressService->trackLessonAccess($user, $lesson);
+            }
+
+            return response()->json([
+                'data' => new LessonResource($lesson),
+            ]);
+        }
+
+        // Premium course - check if lesson is free preview
         if ($lesson->is_free_preview) {
             // Track lesson access
             if ($user) {
                 $this->progressService->trackLessonAccess($user, $lesson);
             }
-            
+
             return response()->json([
                 'data' => new LessonResource($lesson),
             ]);
@@ -62,7 +74,7 @@ class LessonController extends Controller
                     ],
                 ], 403);
             }
-            
+
             // Track lesson access for purchased courses
             $this->progressService->trackLessonAccess($user, $lesson);
         }

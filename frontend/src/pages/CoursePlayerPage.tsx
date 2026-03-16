@@ -680,7 +680,7 @@ export default function CoursePlayerPage() {
                     navigate(`/courses/${slug}/learn/${prevLesson.slug}`)
                   }
                 }}
-                disabled={currentLessonIndex === 0}
+                disabled={currentLessonIndex <= 0}
                 className="flex-1 max-w-xs"
               >
                 <ChevronLeft className="h-4 w-4 mr-2" />
@@ -694,7 +694,7 @@ export default function CoursePlayerPage() {
                     navigate(`/courses/${slug}/learn/${nextLesson.slug}`)
                   }
                 }}
-                disabled={currentLessonIndex >= (course?.modules?.flatMap(m => m.lessons || []).length || 0) - 1}
+                disabled={currentLessonIndex >= allLessons.length - 1}
                 className="flex-1 max-w-xs bg-primary hover:bg-primary/90"
               >
                 Next Lesson
