@@ -25,6 +25,13 @@ class LessonController extends Controller
         $user = $request->user();
         $course = $lesson->module->course;
 
+        // Admin can access everything
+        if ($user && $user->role === 'admin') {
+            return response()->json([
+                'data' => new LessonResource($lesson),
+            ]);
+        }
+
         // Free preview — always accessible
         if ($lesson->is_free_preview) {
             return response()->json([
@@ -34,28 +41,29 @@ class LessonController extends Controller
 
         // Premium course — check purchase
         if ($course->is_premium) {
-            if ($user->role !== 'admin' && ! $user->hasPurchasedCourse($course->id)) {
+            if (!$user || ! $user->hasPurchasedCourse($course->id)) {
                 return response()->json([
-                    'message' => 'You need to purchase this course to access this lesson.',
+                    'message' => 'Segera berlangganan untuk mengakses konten premium ini.',
                     'type' => 'purchase_required',
                     'course' => [
                         'id' => $course->id,
                         'title' => $course->title,
                         'slug' => $course->slug,
                         'price' => $course->price,
+                        'is_premium' => $course->is_premium,
                     ],
                 ], 403);
             }
         }
 
-        // Check prerequisites
-        if (! $this->progressService->checkPrerequisitesMet($user, $lesson)) {
+        // Check prerequisites for non-admin users
+        if ($user && ! $this->progressService->checkPrerequisitesMet($user, $lesson)) {
             $unmetPrerequisites = $lesson->prerequisites->filter(
                 fn ($prereq) => ! $user->hasCompletedLesson($prereq->id)
             );
 
             return response()->json([
-                'message' => 'You must complete prerequisite lessons first.',
+                'message' => 'Anda harus menyelesaikan lesson prerequisite terlebih dahulu.',
                 'type' => 'prerequisite',
                 'prerequisites' => LessonSummaryResource::collection($unmetPrerequisites),
             ], 403);

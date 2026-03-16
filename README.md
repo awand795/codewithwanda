@@ -247,6 +247,36 @@ Project ini adalah proprietary software yang dikembangkan untuk CodeWithWanda.
 
 Dibangun dengan ❤️ oleh Tim Development CodeWithWanda
 
+## 🔑 Default User Accounts
+
+Setelah menjalankan seeder, Anda dapat login dengan akun berikut:
+
+### Admin Account
+```
+Email: admin@example.com
+Password: password
+Role: admin
+```
+**Akses**: Dapat mengakses SEMUA lesson dan course tanpa perlu purchase
+
+### Premium User Account
+```
+Email: premium@example.com
+Password: password
+Role: premium
+```
+**Akses**: Dapat mengakses course premium yang sudah dibeli
+
+### Free User Account
+```
+Email: user@example.com
+Password: password
+Role: free
+```
+**Akses**: Hanya dapat mengakses free preview lessons
+
+> ⚠️ **Penting**: Jangan gunakan kredensial ini di production. Selalu ubah password default setelah deployment.
+
 ---
 
 **Selamat Belajar! 🎓**

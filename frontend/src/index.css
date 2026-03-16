@@ -25,6 +25,135 @@
   --radius: 0.625rem;
 }
 
+/* Lesson Content Styling */
+.lesson-content {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.lesson-content h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid #3b82f6;
+  line-height: 1.2;
+}
+
+.lesson-content h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.lesson-content h3 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: #374151;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.lesson-content p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #374151;
+  margin-bottom: 1.25rem;
+}
+
+.lesson-content ul,
+.lesson-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.lesson-content li {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.lesson-content strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.lesson-content em {
+  font-style: italic;
+  color: #4b5563;
+}
+
+.lesson-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.lesson-content a:hover {
+  color: #1d4ed8;
+}
+
+.lesson-content blockquote {
+  border-left: 4px solid #3b82f6;
+  background-color: #eff6ff;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+  color: #1e40af;
+}
+
+.lesson-content pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.lesson-content hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 2px solid #e5e7eb;
+}
+
+.lesson-content table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.lesson-content th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.875rem 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  color: #111827;
+}
+
+.lesson-content td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.lesson-content tr:last-child td {
+  border-bottom: 0;
+}
+
+.lesson-content tr:hover {
+  background-color: #f9fafb;
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

@@ -5,29 +5,15 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
   },
-  withCredentials: true,
 })
 
-// Request interceptor to add CSRF token and auth token
+// Request interceptor to add auth token from localStorage
 api.interceptors.request.use((config) => {
-  // Add auth token from localStorage
   const token = localStorage.getItem('auth-token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
-  
-  // Add CSRF token from cookie if available
-  const csrfToken = document.cookie
-    .split('; ')
-    .find(row => row.startsWith('XSRF-TOKEN='))
-    ?.split('=')[1]
-  
-  if (csrfToken) {
-    config.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken)
-  }
-  
   return config
 })
 

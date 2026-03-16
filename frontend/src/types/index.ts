@@ -58,6 +58,14 @@ export interface LessonSummary {
   exercise_description?: string
   programming_language?: string
   test_cases?: Array<{ input: string; expected_output: string }>
+  quiz?: QuizQuestion[]
+}
+
+export interface QuizQuestion {
+  question: string
+  options: string[]
+  correct: number
+  explanation: string
 }
 
 export interface Lesson extends LessonSummary {
@@ -71,6 +79,7 @@ export interface Lesson extends LessonSummary {
   exercise_description?: string
   programming_language?: string
   test_cases?: Array<{ input: string; expected_output: string }>
+  quiz?: QuizQuestion[]
 }
 
 export interface UserProgress {

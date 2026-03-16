@@ -17,11 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->statefulApi();
-
         $middleware->alias([
             'premium' => \App\Http\Middleware\EnsurePremiumAccess::class,
             'admin' => \App\Http\Middleware\EnsureAdminAccess::class,
+        ]);
+
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

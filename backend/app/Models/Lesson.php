@@ -27,6 +27,7 @@ class Lesson extends Model
         'solution_code',
         'programming_language',
         'test_cases',
+        'quiz',
         'is_completed',
     ];
 
@@ -36,6 +37,7 @@ class Lesson extends Model
             'is_free_preview' => 'boolean',
             'is_completed' => 'boolean',
             'test_cases' => 'array',
+            'quiz' => 'array',
         ];
     }
 

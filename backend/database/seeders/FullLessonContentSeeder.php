@@ -287,7 +287,7 @@ class FullLessonContentSeeder extends Seeder
     private function seedReactLessons(): void
     {
         $lessons = [
-            'introduction-to-react' => [
+            'getting-started-with-react-introduction-to-react' => [
                 'content_html' => $this->getReactIntroContent(),
                 'programming_language' => 'javascript',
                 'exercise_description' => 'Buat React component sederhana yang menampilkan greeting.',
@@ -295,7 +295,7 @@ class FullLessonContentSeeder extends Seeder
                 'solution_code' => $this->getReactIntroSolution(),
                 'test_cases' => [],
             ],
-            'setting-up-react-environment' => [
+            'getting-started-with-react-setting-up-react-environment' => [
                 'content_html' => $this->getReactSetupContent(),
                 'programming_language' => 'javascript',
                 'exercise_description' => 'Setup project React dengan Vite dan buat component pertama.',
@@ -399,8 +399,229 @@ class FullLessonContentSeeder extends Seeder
     private function updateLessons(array $lessonsData): void
     {
         foreach ($lessonsData as $slug => $data) {
-            Lesson::where('slug', $slug)->update($data);
+            // Try to find by slug first
+            $updated = Lesson::where('slug', $slug)->update($data);
+            
+            // If not found by slug, try to find by title (for lessons created by CompleteCourseSeeder)
+            if (!$updated) {
+                $title = $this->slugToTitle($slug);
+                if ($title) {
+                    // Try exact match first
+                    $updated = Lesson::where('title', $title)->update($data);
+                    
+                    // Try partial match if exact match fails
+                    if (!$updated) {
+                        $keywords = explode(' ', strtolower($title));
+                        $keywords = array_filter($keywords, fn($k) => strlen($k) > 3);
+                        
+                        foreach ($keywords as $keyword) {
+                            $updated = Lesson::where('title', 'LIKE', "%{$keyword}%")
+                                ->whereNull('content_html')
+                                ->update($data);
+                            if ($updated) break;
+                        }
+                    }
+                }
+            }
         }
+        
+        // Fill remaining lessons with default content
+        $this->fillRemainingLessons();
+    }
+
+    private function fillRemainingLessons(): void
+    {
+        Lesson::whereNull('content_html')->chunk(10, function ($lessons) {
+            foreach ($lessons as $lesson) {
+                $content = $this->generateDefaultContent($lesson->title);
+                $lesson->update([
+                    'content_html' => $content,
+                    'programming_language' => 'javascript',
+                    'exercise_description' => "Practice {$lesson->title} by building a small project.",
+                    'starter_code' => "// Write your code here\n\n",
+                    'solution_code' => "// Solution for {$lesson->title}\n\n",
+                ]);
+            }
+        });
+    }
+
+    private function generateDefaultContent(string $title): string
+    {
+        return <<<MD
+# {$title}
+
+## Introduction
+
+Welcome to this lesson on **{$title}**. In this comprehensive guide, we'll explore the fundamental concepts and practical applications.
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+1. Understand the core concepts of {$title}
+2. Apply best practices in real-world scenarios
+3. Build practical projects using {$title}
+4. Troubleshoot common issues
+
+## Key Concepts
+
+### What is {$title}?
+
+{$title} is an essential topic in web development. Let's dive deep into understanding what it means and why it's important.
+
+### Why It Matters
+
+Understanding {$title} is crucial for becoming a proficient developer. It forms the foundation for many advanced concepts.
+
+## Practical Examples
+
+Here are some practical examples to help you understand {$title} better:
+
+```javascript
+// Example code demonstrating {$title}
+const example = () => {
+  console.log('{$title} in action!');
+};
+
+example();
+```
+
+## Best Practices
+
+When working with {$title}, keep these best practices in mind:
+
+- Always follow established conventions
+- Write clean, readable code
+- Test your implementations thoroughly
+- Keep learning and stay updated
+
+## Common Mistakes to Avoid
+
+1. **Not understanding the basics** - Make sure you grasp the fundamental concepts
+2. **Skipping practice** - Hands-on experience is crucial
+3. **Not reading documentation** - Official docs are your friend
+
+## Summary
+
+In this lesson, we covered the essentials of **{$title}**. Remember, mastery comes with practice, so make sure to complete the exercises and build your own projects!
+
+## Next Steps
+
+Continue practicing and explore related topics to deepen your understanding of {$title}.
+MD;
+    }
+
+    private function slugToTitle(string $slug): ?string
+    {
+        // Map slug to title based on CompleteCourseSeeder structure
+        $slugToTitleMap = [
+            // HTML & CSS
+            'introduction-to-web-development-how-the-web-works' => 'How the Web Works',
+            'introduction-to-web-development-setting-up-development-environment' => 'Setting Up Development Environment',
+            'html5-basics-html-document-structure' => 'HTML Document Structure',
+            'html5-basics-working-with-text-elements' => 'Working with Text Elements',
+            'html5-basics-links-images-media' => 'Links, Images & Media',
+            'html5-basics-lists-tables-forms' => 'Lists, Tables & Forms',
+            'css-fundamentals-css-syntax-selectors' => 'CSS Syntax & Selectors',
+            'css-fundamentals-the-box-model-explained' => 'The Box Model Explained',
+            'modern-layouts-with-flexbox-flexbox-fundamentals' => 'Flexbox Fundamentals',
+            
+            // JavaScript
+            'intro-to-javascript' => 'Intro to JavaScript',
+            'variables-data-types' => 'Variables & Data Types',
+            'conditional-statements' => 'Conditional Statements',
+            'loops-for-while' => 'Loops: For & While',
+            'function-declarations' => 'Function Declarations',
+            'arrays-array-methods' => 'Arrays & Array Methods',
+            'objects-object-methods' => 'Objects & Object Methods',
+            'intro-to-dom' => 'Intro to DOM',
+            'event-handling' => 'Event Handling',
+            'promises' => 'Promises',
+            'async-await' => 'Async/Await',
+            
+            // Node.js
+            'what-is-nodejs' => 'What is Node.js?',
+            'installing-nodejs-npm' => 'Installing Node.js & NPM',
+            'fs-module' => 'FS Module',
+            'http-module' => 'HTTP Module',
+            'intro-to-express' => 'Intro to Express',
+            'express-routing' => 'Express Routing',
+            'express-middleware' => 'Express Middleware',
+            'rest-api-principles' => 'REST API Principles',
+            'crud-endpoints' => 'CRUD Endpoints',
+            'jwt-authentication' => 'JWT Authentication',
+            
+            // React - Getting Started
+            'getting-started-with-react-introduction-to-react' => 'Introduction to React',
+            'getting-started-with-react-setting-up-react-environment' => 'Setting Up React Environment',
+            'getting-started-with-react-your-first-react-component' => 'Your First React Component',
+            // React - Components and Props
+            'react-components-and-props-understanding-components' => 'Understanding Components',
+            'react-components-and-props-working-with-props' => 'Working with Props',
+            'react-components-and-props-component-composition' => 'Component Composition',
+            // React - State and Events
+            'state-and-events-introduction-to-state' => 'Introduction to State',
+            'state-and-events-handling-events' => 'Handling Events',
+            'state-and-events-state-vs-props' => 'State vs Props',
+            // React - Advanced Hooks
+            'advanced-hooks-usememo-and-usecallback' => 'useMemo and useCallback',
+            'advanced-hooks-custom-hooks' => 'Custom Hooks',
+            'advanced-hooks-usereducer-deep-dive' => 'useReducer Deep Dive',
+            // React - Performance Optimization
+            'performance-optimization-reactmemo' => 'React.memo',
+            'performance-optimization-code-splitting' => 'Code Splitting',
+            'performance-optimization-virtual-dom-optimization' => 'Virtual DOM Optimization',
+            
+            // Laravel - Introduction
+            'introduction-to-laravel-what-is-laravel' => 'What is Laravel?',
+            'introduction-to-laravel-installing-laravel' => 'Installing Laravel',
+            'introduction-to-laravel-laravel-directory-structure' => 'Laravel Directory Structure',
+            // Laravel - Routing and Controllers
+            'routing-and-controllers-basic-routing' => 'Basic Routing',
+            'routing-and-controllers-route-parameters' => 'Route Parameters',
+            'routing-and-controllers-creating-controllers' => 'Creating Controllers',
+            // Laravel - Blade Templates
+            'blade-templates-introduction-to-blade' => 'Introduction to Blade',
+            'blade-templates-template-inheritance' => 'Template Inheritance',
+            'blade-templates-blade-components' => 'Blade Components',
+            // Laravel - Eloquent ORM
+            'eloquent-orm-introduction-to-eloquent' => 'Introduction to Eloquent',
+            'eloquent-orm-eloquent-relationships' => 'Eloquent Relationships',
+            'eloquent-orm-eloquent-query-builder' => 'Eloquent Query Builder',
+            
+            // Laravel API - Building REST APIs
+            'building-rest-apis-rest-api-concepts' => 'REST API Concepts',
+            'building-rest-apis-api-resources' => 'API Resources',
+            'building-rest-apis-api-authentication-with-sanctum' => 'API Authentication with Sanctum',
+            // Laravel API - API Testing
+            'api-testing-phpunit-for-apis' => 'PHPUnit for APIs',
+            'api-testing-testing-authentication' => 'Testing Authentication',
+            'api-testing-api-documentation-with-swagger' => 'API Documentation with Swagger',
+            
+            // Full Stack - Project Setup
+            'project-setup-setting-up-laravel-backend' => 'Setting Up Laravel Backend',
+            'project-setup-setting-up-react-frontend' => 'Setting Up React Frontend',
+            'project-setup-connecting-frontend-to-backend' => 'Connecting Frontend to Backend',
+            // Full Stack - Authentication System
+            'authentication-system-laravel-sanctum-setup' => 'Laravel Sanctum Setup',
+            'authentication-system-react-login-form' => 'React Login Form',
+            'authentication-system-protected-routes' => 'Protected Routes',
+            // Full Stack - Payment Integration
+            'payment-integration-midtrans-setup' => 'Midtrans Setup',
+            'payment-integration-creating-payment-endpoint' => 'Creating Payment Endpoint',
+            'payment-integration-handling-webhooks' => 'Handling Webhooks',
+            
+            // Git & GitHub - Git Basics
+            'git-basics-what-is-version-control' => 'What is Version Control?',
+            'git-basics-installing-git' => 'Installing Git',
+            'git-basics-your-first-repository' => 'Your First Repository',
+            // Git & GitHub - GitHub Collaboration
+            'github-collaboration-creating-a-github-account' => 'Creating a GitHub Account',
+            'github-collaboration-pull-requests' => 'Pull Requests',
+            'github-collaboration-code-review-process' => 'Code Review Process',
+        ];
+        
+        return $slugToTitleMap[$slug] ?? null;
     }
 
     // ==================== CONTENT METHODS ====================
