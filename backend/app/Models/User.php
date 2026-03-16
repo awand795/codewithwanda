@@ -62,4 +62,19 @@ class User extends Authenticatable
             ->where('payment_status', 'settlement')
             ->exists();
     }
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(CourseCompletion::class);
+    }
+
+    public function hasCertificate(int $courseId): bool
+    {
+        return $this->certificates()->where('course_id', $courseId)->exists();
+    }
+
+    public function getCertificate(int $courseId): ?CourseCompletion
+    {
+        return $this->certificates()->where('course_id', $courseId)->first();
+    }
 }

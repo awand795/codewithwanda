@@ -129,3 +129,26 @@ export interface CourseProgress {
   completed: number
   percentage: number
 }
+
+export interface Certificate {
+  certificate_uuid: string
+  certificate_hash: string
+  recipient_name: string
+  recipient_email: string
+  course_title: string
+  course_description: string | null
+  completion_date: string
+  completion_date_full: string
+  instructor_name: string
+  organization: string
+  total_lessons: number
+  quiz_score: number
+  verification_url: string
+}
+
+export interface CertificateEligibility {
+  can_claim: boolean
+  progress: CourseProgress
+  quiz_score: number
+  reason: string | null
+}

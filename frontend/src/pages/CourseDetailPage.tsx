@@ -2,11 +2,13 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useCourse } from "@/hooks/useCourses"
 import { useAuthStore } from "@/stores/authStore"
+import { useCertificate, useClaimCertificate } from "@/hooks/useCertificates"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatPrice } from "@/lib/utils"
+import { CertificateDisplay } from "@/components/certificates/CertificateDisplay"
 import {
   BookOpen,
   BarChart,
@@ -21,6 +23,7 @@ import {
   Zap,
   ChevronDown,
   ChevronUp,
+  Download,
 } from "lucide-react"
 
 const difficultyConfig = {
@@ -66,6 +69,16 @@ export default function CourseDetailPage() {
   const { data: course, isLoading } = useCourse(slug || '')
   const { isAuthenticated } = useAuthStore()
   const [expandedModules, setExpandedModules] = useState<number[]>([0])
+
+  // Certificate hooks
+  const { data: certificateData } = useCertificate(course?.id || 0)
+  const claimCertificate = useClaimCertificate(course?.id || 0)
+
+  const handleDownloadCertificate = () => {
+    if (course?.id) {
+      window.open(`/api/courses/${course.id}/certificate/download`, '_blank')
+    }
+  }
 
   if (isLoading) {
     return <CourseDetailSkeleton />
@@ -299,6 +312,19 @@ export default function CourseDetailPage() {
                 ))}
               </CardContent>
             </Card>
+
+            {/* Certificate Section */}
+            {isAuthenticated && course.user_progress && course.user_progress.percentage > 0 && (
+              <CertificateDisplay
+                courseId={course.id}
+                certificate={certificateData?.certificate}
+                eligibility={certificateData?.eligibility}
+                hasCertificate={certificateData?.has_certificate || false}
+                onClaim={() => claimCertificate.mutate()}
+                onDownload={handleDownloadCertificate}
+                isClaiming={claimCertificate.isPending}
+              />
+            )}
           </div>
 
           {/* Right: Sidebar */}

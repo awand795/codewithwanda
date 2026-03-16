@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\LandingController;
 use App\Http\Controllers\Api\LessonController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProgressController;
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -50,4 +51,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments/create', [PaymentController::class, 'create']);
     Route::get('/payments/status/{orderId}', [PaymentController::class, 'status']);
     Route::get('/payments/history', [PaymentController::class, 'history']);
+
+    // Certificate routes
+    Route::get('/courses/{courseId}/certificate/check', [CertificateController::class, 'checkEligibility']);
+    Route::get('/courses/{courseId}/certificate', [CertificateController::class, 'show']);
+    Route::post('/courses/{courseId}/certificate', [CertificateController::class, 'store']);
+    Route::get('/courses/{courseId}/certificate/download', [CertificateController::class, 'download']);
 });
+
+// Public certificate verification
+Route::get('/verify-certificate/{uuid}', [CertificateController::class, 'verify']);
