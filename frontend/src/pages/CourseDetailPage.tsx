@@ -95,7 +95,11 @@ export default function CourseDetailPage() {
   }
 
   const handleStartLearning = () => {
-    if (course.modules && course.modules.length > 0 && course.modules[0].lessons && course.modules[0].lessons.length > 0) {
+    if (course.last_accessed_lesson) {
+      // Continue from last accessed lesson
+      navigate(`/courses/${slug}/learn/${course.last_accessed_lesson.slug}`)
+    } else if (course.modules && course.modules.length > 0 && course.modules[0].lessons && course.modules[0].lessons.length > 0) {
+      // Start from first lesson
       const firstLesson = course.modules[0].lessons[0]
       navigate(`/courses/${slug}/learn/${firstLesson.slug}`)
     }
@@ -332,22 +336,56 @@ export default function CourseDetailPage() {
 
                 {/* CTA Buttons */}
                 <div className="space-y-3">
-                  <Button 
-                    className="w-full h-12 text-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
-                    onClick={handleStartLearning}
-                  >
-                    <PlayCircle className="h-5 w-5 mr-2" />
-                    Start Learning
-                  </Button>
-                  {!isAuthenticated && (
-                    <Button 
-                      variant="outline" 
-                      className="w-full h-12"
-                      onClick={() => navigate('/register')}
-                    >
-                      <Users className="h-5 w-5 mr-2" />
-                      Sign Up to Enroll
-                    </Button>
+                  {course.user_progress && course.user_progress.percentage > 0 ? (
+                    <>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Your Progress</span>
+                          <span className="font-semibold text-primary">{course.user_progress.percentage}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${course.user_progress.percentage}%` }}
+                          />
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {course.user_progress.completed} of {course.user_progress.total} lessons completed
+                        </div>
+                      </div>
+                      <Button
+                        className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                        onClick={handleStartLearning}
+                      >
+                        <PlayCircle className="h-5 w-5 mr-2" />
+                        Continue Learning
+                      </Button>
+                      {course.last_accessed_lesson && (
+                        <div className="text-xs text-center text-muted-foreground">
+                          Last: {course.last_accessed_lesson.title}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="w-full h-12 text-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+                        onClick={handleStartLearning}
+                      >
+                        <PlayCircle className="h-5 w-5 mr-2" />
+                        Start Learning
+                      </Button>
+                      {!isAuthenticated && (
+                        <Button
+                          variant="outline"
+                          className="w-full h-12"
+                          onClick={() => navigate('/register')}
+                        >
+                          <Users className="h-5 w-5 mr-2" />
+                          Sign Up to Enroll
+                        </Button>
+                      )}
+                    </>
                   )}
                 </div>
 

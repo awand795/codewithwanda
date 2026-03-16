@@ -12,13 +12,16 @@ class UserProgress extends Model
     protected $fillable = [
         'user_id',
         'lesson_id',
+        'course_id',
         'completed_at',
+        'last_accessed_at',
     ];
 
     protected function casts(): array
     {
         return [
             'completed_at' => 'datetime',
+            'last_accessed_at' => 'datetime',
         ];
     }
 
@@ -30,5 +33,10 @@ class UserProgress extends Model
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);
+    }
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
     }
 }

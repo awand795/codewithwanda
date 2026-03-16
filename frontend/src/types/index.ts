@@ -34,6 +34,8 @@ export interface Course {
   modules?: Module[]
   lessons_count?: number
   modules_count?: number
+  user_progress?: CourseProgress
+  last_accessed_lesson?: LessonSummary
 }
 
 export interface Module {

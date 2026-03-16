@@ -27,6 +27,9 @@ class LessonController extends Controller
 
         // Admin can access everything
         if ($user && $user->role === 'admin') {
+            // Track lesson access for admin too
+            $this->progressService->trackLessonAccess($user, $lesson);
+            
             return response()->json([
                 'data' => new LessonResource($lesson),
             ]);
@@ -34,6 +37,11 @@ class LessonController extends Controller
 
         // Free preview — always accessible
         if ($lesson->is_free_preview) {
+            // Track lesson access
+            if ($user) {
+                $this->progressService->trackLessonAccess($user, $lesson);
+            }
+            
             return response()->json([
                 'data' => new LessonResource($lesson),
             ]);
@@ -54,6 +62,9 @@ class LessonController extends Controller
                     ],
                 ], 403);
             }
+            
+            // Track lesson access for purchased courses
+            $this->progressService->trackLessonAccess($user, $lesson);
         }
 
         // Check prerequisites for non-admin users

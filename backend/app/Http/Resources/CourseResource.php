@@ -9,7 +9,7 @@ class CourseResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'category_id' => $this->category_id,
             'title' => $this->title,
@@ -26,5 +26,8 @@ class CourseResource extends JsonResource
             'lessons_count' => $this->whenCounted('lessons'),
             'modules_count' => $this->whenCounted('modules'),
         ];
+
+        // Merge in any additional data (like user_progress, last_accessed_lesson)
+        return array_merge($data, $this->additional);
     }
 }

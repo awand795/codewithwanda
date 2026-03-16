@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Services\ProgressService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
+    public function __construct(
+        private ProgressService $progressService,
+    ) {}
+
     public function index(Request $request): JsonResponse
     {
         $query = Course::where('is_published', true)
@@ -49,7 +54,7 @@ class CourseController extends Controller
         ]);
     }
 
-    public function show(string $slug): JsonResponse
+    public function show(Request $request, string $slug): JsonResponse
     {
         $course = Course::where('slug', $slug)
             ->where('is_published', true)
@@ -57,8 +62,27 @@ class CourseController extends Controller
             ->withCount(['modules', 'lessons'])
             ->firstOrFail();
 
+        $user = $request->user();
+        $responseData = new CourseResource($course);
+
+        // Add progress data if user is authenticated
+        if ($user) {
+            $progress = $this->progressService->getCourseProgress($user, $course);
+            $lastLesson = $this->progressService->getLastAccessedLesson($user, $course);
+            
+            $responseData->additional([
+                'user_progress' => $progress,
+                'last_accessed_lesson' => $lastLesson ? [
+                    'id' => $lastLesson->id,
+                    'slug' => $lastLesson->slug,
+                    'title' => $lastLesson->title,
+                    'order' => $lastLesson->order,
+                ] : null,
+            ]);
+        }
+
         return response()->json([
-            'data' => new CourseResource($course),
+            'data' => $responseData,
         ]);
     }
 }

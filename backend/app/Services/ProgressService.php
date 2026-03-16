@@ -65,4 +65,51 @@ class ProgressService
             'percentage' => $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0,
         ];
     }
+
+    public function trackLessonAccess(User $user, Lesson $lesson): void
+    {
+        $course = $lesson->module->course;
+        
+        UserProgress::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+            ],
+            [
+                'lesson_id' => $lesson->id,
+                'last_accessed_at' => now(),
+            ]
+        );
+    }
+
+    public function getLastAccessedLesson(User $user, Course $course): ?Lesson
+    {
+        $progress = UserProgress::where('user_id', $user->id)
+            ->where('course_id', $course->id)
+            ->whereNotNull('lesson_id')
+            ->orderBy('last_accessed_at', 'desc')
+            ->first();
+
+        return $progress?->lesson;
+    }
+
+    public function getNextLesson(User $user, Course $course): ?Lesson
+    {
+        $lastLesson = $this->getLastAccessedLesson($user, $course);
+        
+        if (!$lastLesson) {
+            // Return first lesson if no progress
+            return $course->lessons()
+                ->orderBy('order')
+                ->first();
+        }
+
+        // Get the next lesson after the last accessed one
+        $nextLesson = $course->lessons()
+            ->where('order', '>', $lastLesson->order)
+            ->orderBy('order')
+            ->first();
+
+        return $nextLesson ?? $lastLesson;
+    }
 }
