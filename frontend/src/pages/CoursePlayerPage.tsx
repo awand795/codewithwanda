@@ -313,21 +313,6 @@ export default function CoursePlayerPage() {
   const allLessons = course?.modules?.flatMap(m => m.lessons || []) || []
   const currentLessonItem = allLessons[currentLessonIndex]
 
-  // Debug logging for free course access
-  useEffect(() => {
-    if (lessonData) {
-      console.log('Lesson loaded:', {
-        title: lessonData.title,
-        slug: lessonData.slug,
-        isFreePreview: lessonData.is_free_preview,
-        hasAccess: lessonData.has_access,
-        hasContent: !!hasContent,
-        course: course?.title,
-        courseIsPremium: course?.is_premium,
-      })
-    }
-  }, [lessonData, course, hasContent])
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
