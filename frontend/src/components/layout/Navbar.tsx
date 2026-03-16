@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Menu, LogOut, User, CreditCard, LayoutDashboard } from "lucide-react"
+import { Menu, LogOut, User, CreditCard, LayoutDashboard, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuthStore } from "@/stores/authStore"
 import { useLogout } from "@/hooks/useAuth"
+import { useTranslation } from "react-i18next"
 import MobileMenu from "@/components/layout/MobileMenu"
 
 function getInitials(name: string): string {
@@ -29,10 +30,22 @@ export default function Navbar() {
   const { isAuthenticated, user } = useAuthStore()
   const logout = useLogout()
   const navigate = useNavigate()
+  const { i18n, t } = useTranslation()
 
   const handleLogout = () => {
     logout.mutate()
   }
+
+  const languages = [
+    { code: 'id', name: 'Indonesia', flag: '🇮🇩' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+  ]
+
+  const changeLanguage = (code: string) => {
+    i18n.changeLanguage(code)
+  }
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0]
 
   return (
     <>
@@ -73,6 +86,30 @@ export default function Navbar() {
 
           {/* Right: Auth section */}
           <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1 hidden sm:flex">
+                  <Globe className="h-4 w-4" />
+                  <span className="text-xs">{currentLanguage.flag}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {languages.map(lang => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code)}
+                    className="gap-2 cursor-pointer"
+                  >
+                    <span>{lang.flag}</span>
+                    <span>{lang.name}</span>
+                    {i18n.language === lang.code && (
+                      <span className="ml-auto text-green-600">✓</span>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none">
